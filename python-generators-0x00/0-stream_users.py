@@ -7,7 +7,7 @@ import mysql.connector
 from mysql.connector import Error
 
 
-def stream_users():
+def stream_users(): 
     """
     Generator that yields rows from user_data table one by one as dictionaries.
     """
