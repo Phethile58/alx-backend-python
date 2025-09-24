@@ -18,7 +18,7 @@ def connect_db():
         connection = mysql.connector.connect(
             host="localhost",
             user="root",       # update if needed
-            password=""        # update if needed
+            password="Letho@1arya"        # update if needed
         )
         if connection.is_connected():
             return connection
@@ -47,7 +47,7 @@ def connect_to_prodev():
         connection = mysql.connector.connect(
             host="localhost",
             user="root",   # update if needed
-            password="",   # update if needed
+            password="Letho@1arya",   # update if needed
             database="ALX_prodev"
         )
         if connection.is_connected():
@@ -103,3 +103,23 @@ def insert_data(connection, csv_file):
         print(f"Error inserting data: {e}")
     except FileNotFoundError:
         print(f"CSV file {csv_file} not found")
+if __name__ == "__main__":
+    # Step 1: connect without selecting a DB
+    connection = connect_db()
+    if connection:
+        create_database(connection)
+        connection.close()
+        print("Database checked/created ✅")
+
+        # Step 2: connect to ALX_prodev
+        connection = connect_to_prodev()
+        if connection:
+            create_table(connection)
+            print("Table checked/created ✅")
+
+            # Step 3: insert data from CSV
+            insert_data(connection, "user_data.csv")
+            print("Data inserted ✅")
+
+            connection.close()
+
