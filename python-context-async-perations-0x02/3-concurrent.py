@@ -8,9 +8,9 @@ import asyncio
 import aiosqlite
 
 
-async def setup_database():
+async def setup_database(db_name="users.db"):
     """Create and populate the users table for demo purposes."""
-    async with aiosqlite.connect("users.db") as db:
+    async with aiosqlite.connect(db_name) as db:
         await db.execute(
             """CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY,
@@ -18,7 +18,6 @@ async def setup_database():
                 age INTEGER
             )"""
         )
-        await db.execute("DELETE FROM users")  # clear old data to avoid duplicates
         await db.executemany(
             "INSERT INTO users (name, age) VALUES (?, ?)",
             [
@@ -30,7 +29,7 @@ async def setup_database():
             ],
         )
         await db.commit()
-    return "users.db"
+    return db_name
 
 
 async def async_fetch_users(db_name="users.db"):
