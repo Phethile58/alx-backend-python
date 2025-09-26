@@ -10,7 +10,7 @@ import aiosqlite
 
 async def setup_database():
     """Create and populate the users table for demo purposes."""
-    async with aiosqlite.connect(":memory:") as db:
+    async with aiosqlite.connect("users.db") as db:
         await db.execute(
             """CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY,
@@ -18,6 +18,7 @@ async def setup_database():
                 age INTEGER
             )"""
         )
+        await db.execute("DELETE FROM users")  # clear old data to avoid duplicates
         await db.executemany(
             "INSERT INTO users (name, age) VALUES (?, ?)",
             [
@@ -29,17 +30,17 @@ async def setup_database():
             ],
         )
         await db.commit()
-    return ":memory:"
+    return "users.db"
 
 
-async def async_fetch_users(db_name=":memory:"):
+async def async_fetch_users(db_name="users.db"):
     """Fetch all users from the database."""
     async with aiosqlite.connect(db_name) as db:
         async with db.execute("SELECT * FROM users") as cursor:
             return await cursor.fetchall()
 
 
-async def async_fetch_older_users(db_name=":memory:"):
+async def async_fetch_older_users(db_name="users.db"):
     """Fetch users older than 40 from the database."""
     async with aiosqlite.connect(db_name) as db:
         async with db.execute(
@@ -64,6 +65,7 @@ async def fetch_concurrently():
     print("\nUsers older than 40:")
     for row in results_old:
         print(row)
+
 
 if __name__ == "__main__":
     asyncio.run(fetch_concurrently())
