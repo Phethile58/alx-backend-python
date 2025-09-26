@@ -42,9 +42,7 @@ async def async_fetch_users(db_name=":memory:"):
 async def async_fetch_older_users(db_name=":memory:"):
     """Fetch users older than 40 from the database."""
     async with aiosqlite.connect(db_name) as db:
-        async with db.execute(
-            "SELECT * FROM users WHERE age > 40"
-        ) as cursor:
+        async with db.execute("SELECT * FROM users WHERE age > 40") as cursor:
             return await cursor.fetchall()
 
 
