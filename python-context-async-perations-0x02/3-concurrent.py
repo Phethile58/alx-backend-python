@@ -51,6 +51,7 @@ async def async_fetch_older_users(db_name=":memory:"):
 async def fetch_concurrently():
     """Run both queries concurrently and print results."""
     db_name = await setup_database()
+
     results_all, results_old = await asyncio.gather(
         async_fetch_users(db_name),
         async_fetch_older_users(db_name),
@@ -63,7 +64,6 @@ async def fetch_concurrently():
     print("\nUsers older than 40:")
     for row in results_old:
         print(row)
-
 
 if __name__ == "__main__":
     asyncio.run(fetch_concurrently())
