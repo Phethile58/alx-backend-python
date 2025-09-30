@@ -5,7 +5,7 @@ Unit tests for utils.py
 
 import unittest
 from parameterized import parameterized
-from unittest.mock import patch, Mock 
+from unittest.mock import patch, Mock
 from utils import access_nested_map, get_json, memoize
 
 
@@ -39,17 +39,19 @@ class TestGetJson(unittest.TestCase):
         ("http://holberton.io", {"payload": False}),
     ])
     def test_get_json(self, test_url, test_payload):
-        """Test that get_json returns the expected result without real HTTP calls."""
+        """Test that get_json returns expected result without HTTP calls."""
         mock_response = Mock()
         mock_response.json.return_value = test_payload
 
-        with patch("utils.requests.get", return_value=mock_response) as mock_get:
+        with patch(
+            "utils.requests.get",
+            return_value=mock_response
+        ) as mock_get:
             result = get_json(test_url)
-            # check function output
             self.assertEqual(result, test_payload)
-            # ensure requests.get was called once with the URL
             mock_get.assert_called_once_with(test_url)
-            
+
+
 class TestMemoize(unittest.TestCase):
     """Tests for the memoize decorator."""
 
@@ -64,12 +66,12 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 return self.a_method()
 
-        with patch.object(TestClass, "a_method", return_value=42) as mock_method:
+        with patch.object(
+            TestClass,
+            "a_method",
+            return_value=42
+        ) as mock_method:
             obj = TestClass()
-            # First call → should call a_method
             self.assertEqual(obj.a_property, 42)
-            # Second call → should use cached result
             self.assertEqual(obj.a_property, 42)
-
-            # Ensure a_method was only called once
             mock_method.assert_called_once()
