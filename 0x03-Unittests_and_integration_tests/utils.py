@@ -45,7 +45,7 @@ def get_json(url: str) -> dict:
     return response.json()
 
 
-def memoize(method):
+def memoize(method: callable) -> callable:
     """
     Decorator to cache a method's result in the instance.
 

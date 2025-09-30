@@ -1,38 +1,44 @@
 # 0x03. Unittests and Integration Tests
 
-## Project Description
+## Project Overview
 
-This project focuses on understanding and implementing unit testing and integration testing in Python using the `unittest` framework.  
-It includes testing patterns such as mocking, parameterization, and decorators.  
+This project focuses on writing **unit tests** and **integration tests** in Python using the `unittest` framework.  
+It demonstrates testing patterns such as **mocking**, **parameterization**, and **memoization**.
 
-The project aims to:
-- Differentiate between unit tests and integration tests.
-- Practice mocking external calls using `unittest.mock`.
-- Parameterize tests for multiple inputs using `parameterized`.
-- Test function logic without making actual HTTP calls.
-- Test caching decorators.
+The goal is to ensure that functions and methods work correctly in isolation and when integrated with other parts of the system.
 
 ---
 
 ## Files
 
-| File                | Description                                                                                   |
-|---------------------|-----------------------------------------------------------------------------------------------|
-| `utils.py`         | Contains the functions `access_nested_map`, `get_json`, and the `memoize` decorator.         |
-| `test_utils.py`    | Contains unit tests for `utils.py` using the `unittest` framework and `parameterized`.       |
-| `fixtures.py`      | Contains fixtures for testing (if applicable).                                              |
-| `README.md`        | Project description and instructions.                                                        |
+- **`utils.py`**  
+  Contains utility functions:
+  - `access_nested_map`: Accesses nested dictionaries.
+  - `get_json`: Retrieves JSON payload from a URL.
+  - `memoize`: Decorator to cache method results.
+
+- **`test_utils.py`**  
+  Contains unit tests for functions in `utils.py`:
+  - Tests `access_nested_map` with normal and edge cases.
+  - Tests `get_json` without making real HTTP calls using `unittest.mock.patch`.
+  - Tests `memoize` to ensure caching behavior.
 
 ---
 
 ## Requirements
 
-- Python 3.7+
-- `parameterized` library
-- `requests` library
-- `unittest` standard library
+- Python 3.7+  
+- `requests` library  
+- `parameterized` library  
+- `unittest` module (built-in)  
 
-Install requirements with:
+---
+
+## Installation
+
+Clone the repository and install dependencies:
 
 ```bash
-pip install parameterized requests
+git clone <repository_url>
+cd 0x03-Unittests_and_integration_tests
+pip install -r requirements.txt

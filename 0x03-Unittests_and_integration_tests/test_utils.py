@@ -5,7 +5,7 @@ Unit tests for utils.py
 
 import unittest
 from parameterized import parameterized
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock 
 from utils import access_nested_map, get_json, memoize
 
 
