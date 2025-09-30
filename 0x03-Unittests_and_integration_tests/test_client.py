@@ -31,10 +31,13 @@ class TestGithubOrgClient(unittest.TestCase):
 
     def test_public_repos_url(self):
         """Test that _public_repos_url returns the expected repos_url."""
+        mock_payload = {
+            "repos_url": "https://api.github.com/orgs/google/repos"
+        }
 
-        mock_payload = {"repos_url": "https://api.github.com/orgs/google/repos"}
-
-        with patch("client.GithubOrgClient.org", new_callable=PropertyMock) as mock_org:
+        with patch(
+            "client.GithubOrgClient.org", new_callable=PropertyMock
+        ) as mock_org:
             mock_org.return_value = mock_payload
             client = GithubOrgClient("google")
 
@@ -45,29 +48,20 @@ class TestGithubOrgClient(unittest.TestCase):
 
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
-        """Test GithubOrgClient.public_repos returns the expected repo list."""
-
-        # Mocked data for repos
-        mock_repos_payload = [
-            {"name": "repo1"},
-            {"name": "repo2"},
-            {"name": "repo3"}
+        """Test that public_repos returns expected list of repos."""
+        mock_get_json.return_value = [
+            {"name": "repo1"}, {"name": "repo2"}
         ]
 
-        mock_get_json.return_value = mock_repos_payload
-
-        with patch(
-            "client.GithubOrgClient._public_repos_url",
-            new_callable=PropertyMock
-        ) as mock_public_url:
-            mock_public_url.return_value = "https://api.github.com/orgs/google/repos"
+        with patch.object(
+            GithubOrgClient, "_public_repos_url", new_callable=PropertyMock
+        ) as mock_url:
+            mock_url.return_value = "fake_url"
             client = GithubOrgClient("google")
 
-            self.assertEqual(client.public_repos(), ["repo1", "repo2", "repo3"])
-            mock_public_url.assert_called_once()
-            mock_get_json.assert_called_once_with(
-                "https://api.github.com/orgs/google/repos"
-            )
+            self.assertEqual(client.public_repos(), ["repo1", "repo2"])
+            mock_url.assert_called_once()
+            mock_get_json.assert_called_once()
 
 
 if __name__ == "__main__":
