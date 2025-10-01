@@ -4,7 +4,7 @@ Integration tests for GithubOrgClient.
 """
 
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from parameterized import parameterized_class
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
@@ -23,27 +23,27 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Patch requests.get to return fixture data"""
+        """Patch requests.get before tests run"""
         cls.get_patcher = patch("requests.get")
+        cls.mock_get = cls.get_patcher.start()
 
         def mock_get(url, *args, **kwargs):
-            mock_resp = MagicMock()
-            if url == cls.org_payload["repos_url"]:
-                mock_resp.json.return_value = cls.repos_payload
-            else:
-                mock_resp.json.return_value = cls.org_payload
-            return mock_resp
+            class MockResponse:
+                def json(self_inner):
+                    if url == cls.org_payload["repos_url"]:
+                        return cls.repos_payload
+                    return cls.org_payload
+            return MockResponse()
 
-        cls.mock_get = cls.get_patcher.start()
         cls.mock_get.side_effect = mock_get
 
     @classmethod
     def tearDownClass(cls):
-        """Stop patching requests.get"""
+        """Stop patcher after all tests."""
         cls.get_patcher.stop()
 
     def test_public_repos(self):
-        """Test public_repos returns expected list of repos."""
+        """Test public_repos returns the expected repos list."""
         client = GithubOrgClient("google")
         self.assertEqual(client.public_repos(), self.expected_repos)
 
